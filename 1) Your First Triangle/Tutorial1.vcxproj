@@ -140,10 +140,6 @@
     <ClCompile Include="tutorial1.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="basicVertex.glsl" />
-    <None Include="colourFragment.glsl" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="renderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

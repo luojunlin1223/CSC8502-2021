@@ -19,10 +19,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="basicVertex.glsl" />
-    <None Include="colourFragment.glsl" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>

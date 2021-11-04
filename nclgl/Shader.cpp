@@ -83,7 +83,7 @@ bool	Shader::LoadShaderFile(const string& filename, string &into)	{
 }
 
 void	Shader::GenerateShaderObject(unsigned int i)	{
-	cout << "Compiling Shader...\n";
+	cout << "Compiling Shader...\n"; 
 
 	string shaderText;
 	if(!LoadShaderFile(shaderFiles[i],shaderText)) {
