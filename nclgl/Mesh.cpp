@@ -4,14 +4,14 @@
 using std::string;
 
 Mesh::Mesh(void)	{
-	glGenVertexArrays(1, &arrayObject);
+	glGenVertexArrays(1, &arrayObject);  //生成VAO
 	
 	for(int i = 0; i < MAX_BUFFER; ++i) {
 		bufferObject[i] = 0;
 	}
 
-	numVertices  = 0;
-	type		 = GL_TRIANGLES;
+	numVertices  = 0; 
+	type		 = GL_TRIANGLES;//用三角形作为图元
 
 	numIndices		= 0;
 	vertices		= nullptr;
@@ -37,16 +37,15 @@ Mesh::~Mesh(void)	{
 	delete[]	weights;
 	delete[]	weightIndices;
 }
-
 void Mesh::Draw()	{
-	glBindVertexArray(arrayObject);
-	if(bufferObject[INDEX_BUFFER]) {
+	glBindVertexArray(arrayObject);//绑定VAO
+	if(bufferObject[INDEX_BUFFER]) {//是否使用EBO
 		glDrawElements(type, numIndices, GL_UNSIGNED_INT, 0);
 	}
 	else{
-		glDrawArrays(type, 0, numVertices);
+		glDrawArrays(type, 0, numVertices);//0代表 the starting index in the enabled arrays.
 	}
-	glBindVertexArray(0);	
+	glBindVertexArray(0);//解绑VAO
 }
 
 void Mesh::DrawSubMesh(int i) {
@@ -65,8 +64,18 @@ void Mesh::DrawSubMesh(int i) {
 	}
 	glBindVertexArray(0);
 }
-
+/**
+* @brief 定义具体的BufferData怎么读取
+* @param id VBO的id
+* @param numElenmets 元素个数
+* @param dataSize 单个数据的大小
+* @param attribSize 一组数据的大小
+* @param attribID 数据id
+* @param pointer 具体的顶点数据数组
+* @param debugName 按此名称在VBO空间中标识对象
+*/
 void UploadAttribute(GLuint* id, int numElements, int dataSize, int attribSize, int attribID, void* pointer, const string&debugName) {
+
 	glGenBuffers(1, id);
 	glBindBuffer(GL_ARRAY_BUFFER, *id);
 	glBufferData(GL_ARRAY_BUFFER, numElements * dataSize, pointer, GL_STATIC_DRAW);
@@ -74,11 +83,13 @@ void UploadAttribute(GLuint* id, int numElements, int dataSize, int attribSize, 
 	glVertexAttribPointer(attribID, attribSize, GL_FLOAT, GL_FALSE, 0, 0);
 	glEnableVertexAttribArray(attribID);
 
-	glObjectLabel(GL_BUFFER, *id, -1, debugName.c_str());
+	glObjectLabel(GL_BUFFER, *id, -1, debugName.c_str());//glObjectLabel标签在标识符给定的命名空间中按名称标识的对象。
 }
-
+/** 
+* @brief 通过绑定对应的buffer上传顶点数据给GPU
+*/
 void	Mesh::BufferData()	{
-	glBindVertexArray(arrayObject);
+	glBindVertexArray(arrayObject); //绑定VAO
 
 	////Buffer vertex data
 	UploadAttribute(&bufferObject[VERTEX_BUFFER], numVertices, sizeof(Vector3), 3, VERTEX_BUFFER, vertices, "Positions");
@@ -122,9 +133,9 @@ void	Mesh::BufferData()	{
 
 		glObjectLabel(GL_BUFFER, bufferObject[INDEX_BUFFER], -1, "Indices");
 	}
-	glBindVertexArray(0);	
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);//解绑VAO	
+	glBindBuffer(GL_ARRAY_BUFFER, 0);//解绑VBO
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);//解绑EBO
 }
 
 
@@ -419,7 +430,7 @@ bool Mesh::GetSubMesh(const string& name, const SubMesh* s) const {
 Mesh* Mesh::GenerateTriangle()
 {
 	Mesh* m = new Mesh();
-	m->numVertices = 3;
+	m->numVertices = 3;//顶点数量
 
 	m->vertices = new Vector3[m->numVertices];
 	m->vertices[0] = Vector3(0.0f, 0.5f, 0.0f);
@@ -436,6 +447,8 @@ Mesh* Mesh::GenerateTriangle()
 	m->textureCoords[1] = Vector2(1.0f, 1.0f);
 	m->textureCoords[2] = Vector2(0.0f, 1.0f);
 
+	//顶点的属性 颜色属性 贴图坐标
+
 	m->BufferData();
 	return m;
 }
@@ -443,7 +456,7 @@ Mesh* Mesh::GenerateTriangle()
 Mesh* Mesh::GenerateQuad() {
 	Mesh* m = new Mesh();
 	m-> numVertices = 4;
-	m-> type = GL_TRIANGLE_STRIP;
+	m-> type = GL_TRIANGLE_STRIP;//四边形
 	m-> vertices = new Vector3[m-> numVertices];
 	m-> textureCoords = new Vector2[m-> numVertices];
 	m-> colours = new Vector4[m-> numVertices];
@@ -456,9 +469,122 @@ Mesh* Mesh::GenerateQuad() {
 	m-> textureCoords[2] = Vector2(1.0f, 1.0f);
 	m-> textureCoords[3] = Vector2(1.0f, 0.0f);
 	
+	m-> normals = new Vector3[m-> numVertices]; // Init new var !
+	m-> tangents = new Vector4[m-> numVertices]; // Init new var !
+
+
+
 	for (int i = 0; i < 4; ++i) {
 		m-> colours[i] = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		m-> normals[i] = Vector3(0.0f, 0.0f, -1.0f); // New !
+		m-> tangents[i] = Vector4(1.0f, 0.0f, 0.0f, 1.0f); // New !
 	}
 	m-> BufferData();
 	return m;
+}
+
+void Mesh::GenerateNormals()
+{
+	if (!normals) {
+		normals = new Vector3[numVertices];
+	}
+	for (GLuint i = 0; i < numVertices; ++i) {
+		normals[i] = Vector3();
+	}
+	
+	int triCount = GetTriCount();
+	for (int i = 0; i < triCount; ++i) {
+		unsigned int a = 0;
+		unsigned int b = 0;
+		unsigned int c = 0;
+		GetVertexIndicesForTri(i, a, b, c);
+			Vector3 normal = Vector3::Cross((vertices[b] - vertices[a]),
+				(vertices[c] - vertices[a]));
+		
+		normals[a] += normal;
+		normals[b] += normal;
+		normals[c] += normal;
+		
+	}
+	for (GLuint i = 0; i < numVertices; ++i) {
+		normals[i].Normalise();
+	}
+
+}
+
+bool Mesh::GetVertexIndicesForTri(unsigned int i, unsigned int& a, unsigned int& b, unsigned int& c) const
+{
+	unsigned int triCount = GetTriCount();
+	if (i >= triCount) {
+		return false;
+	}
+	if (numIndices > 0) {
+		a = indices[(i * 3)];
+		b = indices[(i * 3) + 1];
+		c = indices[(i * 3) + 2];
+	}
+	else {
+		a = (i * 3);
+		b = (i * 3) + 1;
+		c = (i * 3) + 2;
+	}
+	return true;
+}
+
+void Mesh::GenerateTangents()
+{
+	if (!textureCoords) {
+		return;
+		
+	}
+	if (!tangents) {
+		 tangents = new Vector4[numVertices];
+	
+	}
+	for (GLuint i = 0; i < numVertices; ++i) {
+		tangents[i] = Vector4(0, 0, 0, 0);
+		
+	}
+	
+	int triCount = GetTriCount();
+
+	for (int i = 0; i < triCount; ++i) {
+		unsigned int a = 0;
+		unsigned int b = 0;
+		unsigned int c = 0;
+		GetVertexIndicesForTri(i, a, b, c);
+		Vector4 tangent = GenerateTangent(a, b, c);
+		tangents[a] += tangent;
+		tangents[b] += tangent;
+		tangents[c] += tangent;
+	
+	}
+	for (GLuint i = 0; i < numVertices; ++i) {
+			float handedness = tangents[i].w > 0.0f ? 1.0f : -1.0f;
+			tangents[i].w = 0.0f;
+			tangents[i].Normalise();
+			tangents[i].w = handedness;
+	}
+
+}
+Vector4 Mesh::GenerateTangent(int a, int b, int c) {
+	Vector3 ba = vertices[b] - vertices[a];
+	Vector3 ca = vertices[c] - vertices[a];
+	Vector2 tba = textureCoords[b] - textureCoords[a];
+	Vector2 tca = textureCoords[c] - textureCoords[a];
+	Matrix2 texMatrix = Matrix2(tba, tca);
+	texMatrix.Invert();
+	Vector3 tangent;
+	Vector3 binormal;
+	tangent = ba * texMatrix.values[0] + ca * texMatrix.values[1];
+	binormal = ba * texMatrix.values[2] + ca * texMatrix.values[3];
+
+	Vector3 normal = Vector3::Cross(ba, ca);
+	Vector3 biCross = Vector3::Cross(tangent, normal);
+
+	float handedness = 1.0f;
+	if (Vector3::Dot(biCross, binormal) < 0.0f) {
+		handedness = -1.0f;
+	}
+	return Vector4(tangent.x, tangent.y, tangent.z, handedness);
 }

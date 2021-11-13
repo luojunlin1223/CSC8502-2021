@@ -14,12 +14,12 @@ int main()	{
 
 	while(w.UpdateWindow() && !Window::GetKeyboard()->KeyDown(KEYBOARD_ESCAPE)){				//And enter a while loop that renders the scene
 		if(Window::GetKeyboard()->KeyTriggered(KEYBOARD_1)) {
-			renderer.ToggleObject();
+			renderer.ToggleObject(); 
 		}
 		if(Window::GetKeyboard()->KeyTriggered(KEYBOARD_2)) {
 			renderer.ToggleDepth();
 		}
-		if(Window::GetKeyboard()->KeyTriggered(KEYBOARD_3)) {
+		if(Window::GetKeyboard()->KeyTriggered(KEYBOARD_3)) {//混合的方式
 			renderer.ToggleAlphaBlend();
 		}
 		if(Window::GetKeyboard()->KeyTriggered(KEYBOARD_4)) {

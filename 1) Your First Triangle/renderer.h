@@ -7,6 +7,6 @@ public:
 	virtual ~Renderer(void);
 	virtual void RenderScene();
 protected:
-	Mesh* triangle;
-	Shader* basicShader;
+	Mesh* triangle;//三角形的网格
+	Shader* basicShader;//shader
 };

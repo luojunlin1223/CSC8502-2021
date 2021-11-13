@@ -2,7 +2,7 @@
 Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 	triangle = Mesh::GenerateTriangle();
 
-	matrixShader = new Shader("MatrixVertex.glsl ","colourFragment.glsl ");
+	matrixShader = new Shader("MatrixVertex.glsl","colourFragment.glsl");
 
 	if (!matrixShader->LoadSuccess()) {
 		return;
@@ -34,7 +34,8 @@ void Renderer::RenderScene() {
 	BindShader(matrixShader);
 
 	glUniformMatrix4fv(glGetUniformLocation(matrixShader-> GetProgram()
-		, "projMatrix"), 1, false, projMatrix.values);
+		, "projMatrix"), 1, false, projMatrix.values);//向shader的unifrom变量传递内容 第二个参数是count 
+	//如果目标的uniform变量不是数组，则应该是1，如果它是数组，则应该是1或更多。
 
 	glUniformMatrix4fv(glGetUniformLocation(matrixShader-> GetProgram()
 		, "viewMatrix"), 1, false, viewMatrix.values);
@@ -47,7 +48,7 @@ void Renderer::RenderScene() {
 
 	modelMatrix = Matrix4::Translation(tempPos) *
 	Matrix4::Rotation(rotation, Vector3(0, 1, 0)) *
-	 Matrix4::Scale(Vector3(scale, scale, scale));
+	 Matrix4::Scale(Vector3(scale, scale, scale)); //通常的变化顺序是 SRT 相乘的时候需要把顺序进行调换
 
 	glUniformMatrix4fv(glGetUniformLocation(
 	matrixShader-> GetProgram(), "modelMatrix"),

@@ -63,7 +63,13 @@ void Renderer::MoveObject(float by) {
 void Renderer::ToggleBlendMode() {
 	blendMode = (blendMode + 1) % 4;
 	switch (blendMode) {
-		case (0): glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); break;
+		//把某一像素位置原来的颜色和将要画上去的颜色，通过某种方式混在一起，从而实现特殊的效果
+		//透过红色的玻璃去看绿色的物体，那么可以先绘制绿色的物体，再绘制红色玻璃。
+		//在绘制红色玻璃的时候，利用“混合”功能，把将要绘制上去的红色和原来的绿色进行混合，于是得到一种新的颜色，看上去就好像玻璃是半透明的。
+
+		case (0): glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); break;//颜色混合函数 Sfactor源因子 dfactor目标因子 
+		//源颜色乘以自身的alpha 值，目标颜色乘以1.0减去源颜色的alpha值，这样一来，源颜色的alpha值越大，则产生的新颜色中源颜色所占比例就越大，而目标颜色所占比例则减 小。
+		//这种情况下，我们可以简单的将源颜色的alpha值理解为“不透明度”。这也是混合时最常用的方式。
 		case (1): glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR); break;
 		case (2): glBlendFunc(GL_ONE, GL_ZERO); break;
 		case (3): glBlendFunc(GL_SRC_ALPHA, GL_ONE); break;

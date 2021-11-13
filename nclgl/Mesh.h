@@ -24,7 +24,7 @@ _-_-_-_-_-_-_-""  ""
 
 //A handy enumerator, to determine which member of the bufferObject array
 //holds which data
-enum MeshBuffer {
+enum MeshBuffer {//枚举 创建的时候 用max 再分别把顶点颜色等等属性 分别放入数据的对应位置
 	VERTEX_BUFFER	,
 	COLOUR_BUFFER	, 
 	TEXTURE_BUFFER	,
@@ -48,7 +48,9 @@ public:
 
 	Mesh(void);
 	~Mesh(void);
-
+	/**
+	* @brief 绘制网格体 可以选择是否使用EBO绘制
+	*/
 	void Draw();
 	void DrawSubMesh(int i);
 
@@ -83,17 +85,31 @@ public:
 	bool GetSubMesh(int i, const SubMesh* s) const;
 	bool GetSubMesh(const std::string& name, const SubMesh* s) const;
 
+	/**
+	* @brief 生成一个三角形网格体把顶点颜色贴图数据录入并且上传给GPU
+	* @return 三角形的网格体
+	*/
 	static Mesh* GenerateTriangle();
 	static Mesh* GenerateQuad();
+
+	void GenerateNormals();
+	bool GetVertexIndicesForTri(unsigned int i,
+		unsigned int& a, unsigned int& b, unsigned int& c) const;
+
+	void GenerateTangents();
+	Vector4 GenerateTangent(int a, int b, int c);
+
+
 protected:
-	void	BufferData();
+	void	BufferData();	
 
-	GLuint	arrayObject;
+	GLuint	arrayObject;//VAO Unsigned int 类型
 
-	GLuint	bufferObject[MAX_BUFFER];
+	GLuint	bufferObject[MAX_BUFFER];//VBO
 
-	GLuint	numVertices;
-	GLuint	numIndices;
+	GLuint	numVertices;//顶点数量
+
+	GLuint	numIndices;//EBO
 	
 	GLuint	type;
 

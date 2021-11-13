@@ -5,7 +5,7 @@ in Vertex{
 } IN;
 
 
-out vec4 fragColour;
+out vec4 fragColour;//片段着色器一定要输出的数据
 void main(void) {
 	fragColour = IN.colour;
 }

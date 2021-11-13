@@ -13,7 +13,7 @@ public:
 protected:
 	Shader* shader;
 	Mesh* triangle;
-	GLuint texture;
+	GLuint texture;//生成的纹理的index
 	bool filtering;
 	bool repeating;
 };

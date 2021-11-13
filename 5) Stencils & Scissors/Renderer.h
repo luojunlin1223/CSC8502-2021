@@ -13,7 +13,7 @@ public:
 	
 protected:
 	Shader * shader;
-	Mesh * meshes[2];
+	Mesh * meshes[2];//一个三角形和一个四边形
 	GLuint textures[2];
 	
 	bool usingScissor;

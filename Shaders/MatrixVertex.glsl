@@ -12,7 +12,7 @@ out Vertex {
 } OUT ;
 
 void main ( void ) {
-	mat4 mvp = projMatrix * viewMatrix * modelMatrix ;
+	mat4 mvp = projMatrix * viewMatrix * modelMatrix ;//组合成一个MVP矩阵
 	gl_Position = mvp * vec4 ( position , 1.0);
 	OUT . colour = colour ;
 }

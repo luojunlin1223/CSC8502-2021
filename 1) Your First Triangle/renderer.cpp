@@ -7,7 +7,7 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
  if (!basicShader->LoadSuccess()){
  return;
 }
- init = true;
+ init = true;//加载shader程序 初始化成功
 }
 Renderer ::~Renderer(void) {
  delete triangle;
@@ -15,8 +15,8 @@ Renderer ::~Renderer(void) {
 }
 
 void Renderer::RenderScene() {
-	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(0.2f, 0.2f, 0.2f, 1.0f);//清屏颜色
+	glClear(GL_COLOR_BUFFER_BIT);//清理上一帧的颜色
 	BindShader(basicShader);
 	triangle->Draw();
 }

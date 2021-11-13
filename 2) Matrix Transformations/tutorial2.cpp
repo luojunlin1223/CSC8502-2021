@@ -46,7 +46,7 @@ int main() {
 		renderer.SetRotation(rotation);
 		renderer.SetScale(scale);
 		renderer.SetPosition(position);
-		renderer.UpdateScene(w.GetTimer()-> GetTimeDeltaSeconds());
+		renderer.UpdateScene(w.GetTimer()-> GetTimeDeltaSeconds());//视野变化之后 更新参数
 		renderer.RenderScene();
 		renderer.SwapBuffers();
 	}

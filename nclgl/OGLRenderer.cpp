@@ -14,6 +14,7 @@ _-_-_-_-_-_-_-""  ""
 */
 #include "OGLRenderer.h"
 #include "Shader.h"
+#include "Light.h"
 #include <algorithm>
 
 using std::string;
@@ -152,10 +153,6 @@ OGLRenderer::~OGLRenderer(void)	{
 	wglDeleteContext(renderContext);
 }
 
-/*
-Returns TRUE if everything in the constructor has gone to plan.
-Check this to end the application if necessary...
-*/
 bool OGLRenderer::HasInitialised() const{
 	return init;
 }
@@ -171,11 +168,7 @@ void OGLRenderer::Resize(int x, int y)	{
 	glViewport(0,0,width,height);
 }
 
-/*
-Swaps the buffers, ready for the next frame's rendering. Should be called
-every frame, at the end of RenderScene(), or whereever appropriate for
-your application.
-*/
+
 void OGLRenderer::SwapBuffers() {
 	//We call the windows OS SwapBuffers on win32. Wrapping it in this 
 	//function keeps all the tutorial code 100% cross-platform (kinda).
@@ -223,6 +216,18 @@ void OGLRenderer::SetTextureRepeating(GLuint target, bool state) {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 #ifdef OPENGL_DEBUGGING
+void OGLRenderer::SetShaderLight(const Light& l)
+{
+	glUniform3fv(glGetUniformLocation(currentShader-> GetProgram(),
+		"lightPos"), 1, (float*)&l.GetPosition());
+	
+	glUniform4fv(glGetUniformLocation(currentShader-> GetProgram(),
+			"lightColour"), 1, (float*)&l.GetColour());
+
+	glUniform1f(glGetUniformLocation(currentShader-> GetProgram(),
+			"lightRadius"),l.GetRadius());
+
+}
 void OGLRenderer::DebugCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)	{
 		string sourceName;
 		string typeName;

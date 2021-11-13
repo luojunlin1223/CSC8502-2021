@@ -18,7 +18,7 @@ protected:
 	GLuint textures[2];
 	Mesh* meshes[2];
 	Shader* shader;
-	Vector3 positions[2];
+	Vector3 positions[2];//两个物件 一个三角形一个四边形
 
 	bool modifyObject;
 	bool usingDepth;

@@ -27,6 +27,13 @@ class OGLRenderer;
 
 class Window	{
 public:
+	/**
+	* @brief 创建一个窗体
+	* @param title 窗体的名称
+	* @param sizeX 窗体的X大小
+	* @param sizeY 窗体的Y大小
+	* @param fullScreen 是否需要充满屏幕
+	*/
 	Window(std::string title = "OpenGL Framework", int sizeX = 800, int sizeY = 600, bool fullScreen = false);
 	~Window(void);
 
@@ -35,7 +42,10 @@ public:
 	void	SetRenderer(OGLRenderer* r);
 
 	HWND	GetHandle();
-
+	/**
+	* @brief 检查所有的构造器是否按照计划进行
+	* @return 初始化状态
+	*/
 	bool	HasInitialised();
 
 	void	LockMouseToWindow(bool lock);
@@ -70,14 +80,14 @@ protected:
 
 	bool				forceQuit;
 	bool				init;
-	bool				fullScreen;
-	bool				lockMouse;
-	bool				showMouse;
+	bool				fullScreen;//是否需要全屏
+	bool				lockMouse;//是否需要锁定鼠标
+	bool				showMouse;//是否需要显示鼠标
 	bool				mouseLeftWindow;
-	bool				isActive;
+	bool				isActive;//窗体是否被激活
 
 	Vector2				position;
 	Vector2				size;
 
-	std::string			windowTitle;
+	std::string			windowTitle;//窗口名称
 };

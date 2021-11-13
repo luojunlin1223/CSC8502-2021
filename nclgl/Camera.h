@@ -16,8 +16,14 @@ public:
 
 	}
 	~Camera(void) {};
+	/**
+	* @brief 更新相机的各项数据 包括俯仰角 位置等等
+	* @param dt 单位改变的步长
+	*/
 	void UpdateCamera(float dt = 1.0f);
-
+	/**
+	* @brief 组合相机移动数据 构建viewmatrix
+	*/
 	Matrix4 BuildViewMatrix();
 
 	Vector3 GetPosition() const { return position; }
@@ -30,8 +36,9 @@ public:
 	void SetPitch(float p) { pitch = p; }
 
 protected:
-	float yaw;
-	float pitch;
+	float yaw;//偏摆
+	float pitch;//俯仰
+	//roll 翻滚
 	Vector3 position; // Set to 0 ,0 ,0 by Vector3 constructor ;)
 };
 
