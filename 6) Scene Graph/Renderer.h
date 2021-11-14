@@ -12,8 +12,11 @@ public:
 	void UpdateScene(float dt) override;
 	void RenderScene() override;
 protected:
+	/**
+	* @brief 递归画所有节点
+	*/
 	void DrawNode(SceneNode * n);
-	SceneNode * root;
+	SceneNode * root;//物体的根节点
 	Camera * camera;
 	Mesh * cube;
 	Shader * shader;

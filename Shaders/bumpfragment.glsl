@@ -26,7 +26,8 @@ normalize ( IN . binormal ) , normalize ( IN . normal ));
 vec4 diffuse = texture ( diffuseTex , IN . texCoord );
 vec3 bumpNormal = texture ( bumpTex , IN . texCoord ). rgb ;
 bumpNormal = normalize ( TBN * normalize ( bumpNormal * 2.0 - 1.0));
-float lambert = max ( dot ( incident , bumpNormal ) , 0.0f );
+
+float lambert = max ( dot ( incident , bumpNormal ) , 0.0f );//把bump map使用上了
 float distance = length ( lightPos - IN . worldPos );
 float attenuation = 1.0f - clamp ( distance / lightRadius ,0.0 ,1.0);
 

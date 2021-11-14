@@ -14,7 +14,8 @@ Renderer::Renderer(Window &parent) : OGLRenderer(parent) {
 
 	camera-> SetPosition(Vector3(0, 30, 175));
 
-	root = new SceneNode();
+	root = new SceneNode();//场景的根节点
+
 	root-> AddChild(new CubeRobot(cube));
 
 	glEnable(GL_DEPTH_TEST);
@@ -46,7 +47,8 @@ void Renderer::RenderScene() {
 void Renderer::DrawNode(SceneNode* n) {
 	if (n-> GetMesh()) {
 		Matrix4 model = n-> GetWorldTransform() *
-		Matrix4::Scale(n-> GetModelScale());
+		Matrix4::Scale(n-> GetModelScale());//本地坐标转化为世界坐标
+
 		glUniformMatrix4fv(
 		glGetUniformLocation(shader-> GetProgram(),
 		"modelMatrix"), 1, false, model.values);

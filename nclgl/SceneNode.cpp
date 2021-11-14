@@ -20,6 +20,9 @@ void SceneNode::AddChild(SceneNode* s) {
 void SceneNode::Draw(const OGLRenderer& r) {
 	if (mesh) { mesh->Draw(); }
 }
+
+
+
 void SceneNode::Update(float dt) {
 	if (parent) { // This node has a parent ...
 		worldTransform = parent-> worldTransform * transform;

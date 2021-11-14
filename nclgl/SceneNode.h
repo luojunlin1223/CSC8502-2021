@@ -7,6 +7,9 @@
 
 class SceneNode {
 public:
+	/**
+	* @brief 创建一个景物节点 默认颜色为1 1 1 1
+	*/
 	SceneNode(Mesh* m = NULL, Vector4 colour = Vector4(1, 1, 1, 1));
 	~SceneNode(void);
 
@@ -24,6 +27,9 @@ public:
 	void SetMesh(Mesh* m) { mesh = m; }
 
 	void AddChild(SceneNode* s);
+	/**
+	* @brief 递归更新每一个物体的坐标 所有的子节点都要乘以父节点的世界坐标
+	*/
 	virtual void Update(float dt);
 	virtual void Draw(const OGLRenderer& r);
 
@@ -34,12 +40,12 @@ public:
 		return children.end();
 	}
 protected:
-	SceneNode* parent;
-	Mesh* mesh;
-	Matrix4 worldTransform;
-	Matrix4 transform;
-	Vector3 modelScale;
-	Vector4 colour;
-	std::vector <SceneNode*> children;
+	SceneNode* parent; //父节点
+	Mesh* mesh; //当前节点的网格体
+	Matrix4 worldTransform;//当前节点的世界坐标
+	Matrix4 transform;//当前节点的变换矩阵
+	Vector3 modelScale;//当前节点的大小
+	Vector4 colour;//当前节点的颜色
+	std::vector <SceneNode*> children;//子节点
 };
 

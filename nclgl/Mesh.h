@@ -53,7 +53,11 @@ public:
 	*/
 	void Draw();
 	void DrawSubMesh(int i);
-
+	/**
+	* @brief 从mesh文件加载内容
+	* @param name 文件地址名
+	* @return 网格体
+	*/
 	static Mesh* LoadFromMeshFile(const std::string& name);
 
 	unsigned int GetTriCount() const {
@@ -91,12 +95,24 @@ public:
 	*/
 	static Mesh* GenerateTriangle();
 	static Mesh* GenerateQuad();
-
+	/**
+	* @brief 计算每一个顶点的法向量
+	*/
 	void GenerateNormals();
+	/**
+	* @brief 从index中得到三角形的顶点信息
+	* @param i 哪一个三角形
+	* @param abc 接受indices
+	*/
 	bool GetVertexIndicesForTri(unsigned int i,
 		unsigned int& a, unsigned int& b, unsigned int& c) const;
-
+	/**
+	* @brief 生成切线向量
+	*/
 	void GenerateTangents();
+	/**
+	* @brief 计算切线
+	*/
 	Vector4 GenerateTangent(int a, int b, int c);
 
 

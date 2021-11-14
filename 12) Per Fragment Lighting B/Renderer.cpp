@@ -28,8 +28,10 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	Vector3 heightmapSize = heightMap->GetHeightmapSize();
 	camera = new Camera(-45.0f, 0.0f,
 		heightmapSize * Vector3(0.5f, 5.0f, 0.5f));
+
 	light = new Light(heightmapSize * Vector3(0.5f, 1.5f, 0.5f),
 		Vector4(1, 1, 1, 1), heightmapSize.x * 0.5f);
+
 	projMatrix = Matrix4::Perspective(1.0f, 15000.0f,
 		(float)width / (float)height, 45.0f);
 
@@ -66,6 +68,8 @@ void Renderer::RenderScene() {
 		"cameraPos"), 1, (float*)&camera->GetPosition());
 
 	UpdateShaderMatrices();
+
 	SetShaderLight(*light);
+
 	heightMap->Draw();
 }

@@ -6,7 +6,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 	camera = new Camera(-40, 270, Vector3());
 	
 	Vector3 dimensions = heightMap->GetHeightmapSize();
-	camera-> SetPosition(dimensions * Vector3(0.5, 2, 0.5));
+	camera-> SetPosition(dimensions * Vector3(0.5, 2, 0.5)); //高度图得高度是一个byte X和Y是缩放后得大小
 	shader = new Shader("TexturedVertex.glsl ",
 			"TexturedFragment.glsl");
 	if (!shader-> LoadSuccess()) {
@@ -27,7 +27,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 			(float)width / (float)height, 45.0f);
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_CULL_FACE);
-	glCullFace(GL_BACK);
+	glCullFace(GL_BACK);//不显示地形的背面
 	init = true;
 }
 Renderer ::~Renderer(void) {

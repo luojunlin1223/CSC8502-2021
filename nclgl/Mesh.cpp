@@ -318,7 +318,7 @@ Mesh* Mesh::LoadFromMeshFile(const string& name) {
 		int chunkType = (int)GeometryChunkTypes::VPositions;
 
 		file >> chunkType;
-
+		//从文件中读取这些信息
 		switch ((GeometryChunkTypes)chunkType) {
 		case GeometryChunkTypes::VPositions:ReadTextFloats(file, readPositions, numVertices);  break;
 		case GeometryChunkTypes::VColors:	ReadTextFloats(file, readColours, numVertices);  break;
@@ -332,7 +332,7 @@ Mesh* Mesh::LoadFromMeshFile(const string& name) {
 		case GeometryChunkTypes::JointNames:		ReadJointNames(file, mesh->jointNames);  break;
 		case GeometryChunkTypes::JointParents:		ReadJointParents(file, mesh->jointParents);  break;
 		case GeometryChunkTypes::BindPose:			ReadRigPose(file, &mesh->bindPose);  break;
-		case GeometryChunkTypes::BindPoseInv:		ReadRigPose(file, &mesh->inverseBindPose);  break;
+		case GeometryChunkTypes::BindPoseInv:		ReadRigPose(file, &mesh->inverseBindPose);  break;//得到inverBindPose
 		case GeometryChunkTypes::SubMeshes: 		ReadSubMeshes(file, numMeshes, mesh->meshLayers); break;
 		case GeometryChunkTypes::SubMeshNames: 		ReadSubMeshNames(file, numMeshes, mesh->layerNames); break;
 		}
@@ -484,7 +484,7 @@ Mesh* Mesh::GenerateQuad() {
 }
 
 void Mesh::GenerateNormals()
-{
+{	//这个方法需要完成两个条件 使用index和不使用index
 	if (!normals) {
 		normals = new Vector3[numVertices];
 	}
@@ -498,9 +498,10 @@ void Mesh::GenerateNormals()
 		unsigned int b = 0;
 		unsigned int c = 0;
 		GetVertexIndicesForTri(i, a, b, c);
-			Vector3 normal = Vector3::Cross((vertices[b] - vertices[a]),
-				(vertices[c] - vertices[a]));
-		
+
+		Vector3 normal = Vector3::Cross((vertices[b] - vertices[a]),
+			(vertices[c] - vertices[a]));
+
 		normals[a] += normal;
 		normals[b] += normal;
 		normals[c] += normal;

@@ -1,11 +1,24 @@
 #include "Renderer.h"
 const int POST_PASSES = 10;
 Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
+	//把渲染出来的帧不输入backbuffer而是输入到一个texture中
+	//texture可以操作周围的采样而不是去移动那些顶点
+	//把所有的图形都渲染到一个texture之后 创建一个四边形 如果四边形的大小合适 贴上贴图就会显示之前的内容
+	//渲染两个三角形铺满屏幕会产生浪费，解决方案是用一个很大的三角形（超出屏幕）来铺满整个屏幕
+	//在fragment shader里面可以更改传来的纹理颜色 来达到一些效果
+
+	//做一个比屏幕大的纹理 然后使用模糊 就可以避免屏幕边缘没有像素的问题
+
+	//一个高度图和一个四边形
+
 	camera = new Camera(-25.0f, 225.0f,Vector3(-150.0f, 250.0f, -150.0f));
+
 	quad = Mesh::GenerateQuad();
+
 	heightMap = new HeightMap(TEXTUREDIR "noise.png");
 	heightTexture =SOIL_load_OGL_texture(TEXTUREDIR "Barren Reds.JPG",
 			SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+
 	sceneShader = new Shader("TexturedVertex.glsl",
 			"TexturedFragment.glsl");
 	processShader = new Shader("TexturedVertex.glsl",
@@ -17,6 +30,7 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 
 	SetTextureRepeating(heightTexture, true);
 	// Generate our scene depth texture ...
+	
 	//我们需要生成三个纹理 一个深度纹理 两个颜色纹理
 	glGenTextures(1, &bufferDepthTex);
 	glBindTexture(GL_TEXTURE_2D, bufferDepthTex);  //深度纹理的生成
@@ -121,6 +135,9 @@ void Renderer::DrawPostProcess() {//我们将使用另一个FBO，但是，不是渲染高度图，
 	glUniform1i(glGetUniformLocation(
 		processShader-> GetProgram(), "sceneTex"), 0);//绑定到激活的绑定点
 	 for (int i = 0; i < POST_PASSES; ++i) {
+		 //ping pong 过程 就是把一个纹理处理后又存储在一个纹理中，继续后续操作
+
+		//POST_PASSES 定义了处理的次数 在这里会使用高斯模糊10次
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 			GL_TEXTURE_2D, bufferColourTex[1], 0);//颜色附件
 		glUniform1i(glGetUniformLocation(processShader-> GetProgram(),

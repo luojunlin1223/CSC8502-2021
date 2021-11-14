@@ -9,7 +9,7 @@ public:
 	Light(const Vector3 & position, const Vector4 & colour, float radius) {
 		this-> position = position;
 		this-> colour = colour;
-		this-> radius = radius;
+		this-> radius = radius; 
 		
 	}
 	
@@ -23,7 +23,7 @@ public:
 	void SetColour(const Vector4 & val) { colour = val; }
 protected:
 	Vector3 position;
-	float radius;
+	float radius;  //为了防止干扰 一般都设置了光源的辐射范围
 	Vector4 colour;
 };
 
