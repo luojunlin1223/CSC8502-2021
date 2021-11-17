@@ -13,15 +13,15 @@ Renderer::Renderer(Window & parent) : OGLRenderer(parent) {
 		 return;	
 	}
 
-	terrainTex = SOIL_load_OGL_texture(TEXTUREDIR "Barren Reds.JPG",
+	terrainTex_green = SOIL_load_OGL_texture(TEXTUREDIR "Barren Reds.JPG",
 			SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
 	
-	if (!terrainTex) {
+	if (!terrainTex_green) {
 		return;
 
 	}
 
-	SetTextureRepeating(terrainTex, true);
+	SetTextureRepeating(terrainTex_green, true);
 
 	projMatrix = Matrix4::Perspective(1.0f, 10000.0f,
 			(float)width / (float)height, 45.0f);
@@ -48,6 +48,6 @@ void Renderer::RenderScene() {
 	glUniform1i(glGetUniformLocation(shader-> GetProgram(),
 			"diffuseTex"), 0);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, terrainTex);
+	glBindTexture(GL_TEXTURE_2D, terrainTex_green);
 	heightMap-> Draw();
 }

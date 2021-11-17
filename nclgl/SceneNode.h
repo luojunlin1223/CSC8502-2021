@@ -33,11 +33,26 @@ public:
 	virtual void Update(float dt);
 	virtual void Draw(const OGLRenderer& r);
 
+
+
 	std::vector <SceneNode*>::const_iterator GetChildIteratorStart() {
 		return children.begin();
 	}
 	std::vector <SceneNode*>::const_iterator GetChildIteratorEnd() {
 		return children.end();
+	}
+
+	float GetBoundingRadius() const { return boundingRadius; }
+	void SetBoundingRadius(float f) { boundingRadius = f; }
+
+	float GetCameraDistance() const { return distanceFromCamera; }
+	void SetCameraDistance(float f) { distanceFromCamera = f; }
+
+	void SetTexture(GLuint tex) { texture = tex; }
+	GLuint GetTexture() const { return texture; }
+
+	static bool CompareByCameraDistance(SceneNode* a, SceneNode* b) {
+		return (a->distanceFromCamera < b->distanceFromCamera) ? true : false;
 	}
 protected:
 	SceneNode* parent; //父节点
@@ -47,5 +62,8 @@ protected:
 	Vector3 modelScale;//当前节点的大小
 	Vector4 colour;//当前节点的颜色
 	std::vector <SceneNode*> children;//子节点
+	float distanceFromCamera;
+	float boundingRadius;
+	GLuint texture;
 };
 

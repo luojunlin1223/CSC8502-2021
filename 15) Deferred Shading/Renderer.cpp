@@ -2,7 +2,7 @@
 #include "../nclgl/HeightMap.h"
 #include "../nclgl/Camera.h"
 #include "../nclgl/Light.h"
-const int LIGHT_NUM = 32;
+const int LIGHT_NUM = 64;
 
 Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	sphere = Mesh::LoadFromMeshFile("Sphere.msh");
@@ -34,7 +34,7 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 			0.5f + (float)(rand() / (float)RAND_MAX),
 			1));
 		l.SetRadius(250.0f + (rand() % 250));
-	}
+	}//随机生成光源
 
 	sceneShader = new Shader("BumpVertex.glsl", // reused !
 			"bufferFragment.glsl");
@@ -60,7 +60,7 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 	GenerateScreenTexture(lightDiffuseTex);
 	GenerateScreenTexture(lightSpecularTex);
 		// And now attach them to our FBOs
-	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO);
+	glBindFramebuffer(GL_FRAMEBUFFER, bufferFBO);//用于光照的信息
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 		GL_TEXTURE_2D, bufferColourTex, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
@@ -72,7 +72,8 @@ Renderer::Renderer(Window& parent) : OGLRenderer(parent) {
 			GL_FRAMEBUFFER_COMPLETE) {
 			return;
 		}
-	glBindFramebuffer(GL_FRAMEBUFFER, pointLightFBO);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, pointLightFBO);//光线的信息
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0,
 			GL_TEXTURE_2D, lightDiffuseTex, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1,
@@ -142,7 +143,7 @@ void Renderer::FillBuffers() {
 	glUniform1i(
 		glGetUniformLocation(sceneShader-> GetProgram(), "bumpTex"), 1);
 	
-		glActiveTexture(GL_TEXTURE0);
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, earthTex);
 	glActiveTexture(GL_TEXTURE1);
 	glBindTexture(GL_TEXTURE_2D, earthBump);
